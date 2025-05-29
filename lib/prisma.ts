@@ -8,20 +8,12 @@ let prisma: PrismaClient
 
 if (process.env.NODE_ENV === "production") {
   prisma = new PrismaClient({
-    datasources: {
-      db: {
-        url: process.env.DATABASE_URL,
-      },
-    },
+    log: ["query", "info", "warn", "error"],
   })
 } else {
   if (!global.__prisma) {
     global.__prisma = new PrismaClient({
-      datasources: {
-        db: {
-          url: process.env.DATABASE_URL,
-        },
-      },
+      log: ["query", "info", "warn", "error"],
     })
   }
   prisma = global.__prisma
