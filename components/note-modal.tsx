@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import type { Note } from "@/types/note"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
@@ -23,12 +23,20 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
   const [editContent, setEditContent] = useState("")
   const [editCategory, setEditCategory] = useState("")
   const [isSaving, setIsSaving] = useState(false)
+  const [currentNote, setCurrentNote] = useState<Note | null>(null)
 
-  if (!note) return null
+  // Update local state when note prop changes
+  useEffect(() => {
+    if (note) {
+      setCurrentNote(note)
+    }
+  }, [note])
+
+  if (!currentNote) return null
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(note.content)
+      await navigator.clipboard.writeText(currentNote.content)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (error) {
@@ -37,8 +45,8 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
   }
 
   const handleOpenUrl = () => {
-    if (note.type === "url") {
-      let url = note.content
+    if (currentNote.type === "url") {
+      let url = currentNote.content
       if (!url.startsWith("http://") && !url.startsWith("https://")) {
         url = `https://${url}`
       }
@@ -47,15 +55,15 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
   }
 
   const handleEdit = () => {
-    setEditContent(note.content)
-    setEditCategory(note.category || "")
+    setEditContent(currentNote.content)
+    setEditCategory(currentNote.category || "")
     setIsEditing(true)
   }
 
   const handleSave = async () => {
     setIsSaving(true)
     try {
-      const response = await fetch(`/api/notes/${note.id}`, {
+      const response = await fetch(`/api/notes/${currentNote.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -67,6 +75,8 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
       })
 
       if (response.ok) {
+        const updatedNote = await response.json()
+        setCurrentNote(updatedNote)
         setIsEditing(false)
         onUpdate?.()
       }
@@ -84,7 +94,7 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
   }
 
   const handleTodoToggle = async (lineIndex: number) => {
-    const lines = note.content.split("\n")
+    const lines = currentNote.content.split("\n")
     const line = lines[lineIndex]
 
     if (line.includes("[ ]")) {
@@ -95,8 +105,12 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
 
     const newContent = lines.join("\n")
 
+    // Update local state immediately for real-time feedback
+    const updatedNote = { ...currentNote, content: newContent }
+    setCurrentNote(updatedNote)
+
     try {
-      const response = await fetch(`/api/notes/${note.id}`, {
+      const response = await fetch(`/api/notes/${currentNote.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -107,10 +121,17 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
       })
 
       if (response.ok) {
+        const savedNote = await response.json()
+        setCurrentNote(savedNote)
         onUpdate?.()
+      } else {
+        // Revert on error
+        setCurrentNote(currentNote)
       }
     } catch (error) {
       console.error("Failed to update todo:", error)
+      // Revert on error
+      setCurrentNote(currentNote)
     }
   }
 
@@ -148,10 +169,10 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
       )
     }
 
-    if (note.type === "todo") {
+    if (currentNote.type === "todo") {
       return (
         <div className="space-y-2">
-          {note.content.split("\n").map((line, index) => (
+          {currentNote.content.split("\n").map((line, index) => (
             <div key={index} className="flex items-start gap-2">
               {line.trim().startsWith("[ ]") || line.trim().startsWith("[x]") ? (
                 <>
@@ -171,18 +192,20 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
       )
     }
 
-    if (note.type === "url") {
+    if (currentNote.type === "url") {
       return (
         <button
           onClick={handleOpenUrl}
           className="text-blue-600 hover:text-blue-800 hover:underline text-left break-all"
         >
-          {note.content}
+          {currentNote.content}
         </button>
       )
     }
 
-    return <div className="whitespace-pre-wrap break-words font-mono text-sm leading-relaxed">{note.content}</div>
+    return (
+      <div className="whitespace-pre-wrap break-words font-mono text-sm leading-relaxed">{currentNote.content}</div>
+    )
   }
 
   return (
@@ -190,10 +213,12 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Badge variant="secondary" className={getTypeColor(note.type)}>
-              {getTypeIcon(note.type)} {note.type}
+            <Badge variant="secondary" className={getTypeColor(currentNote.type)}>
+              {getTypeIcon(currentNote.type)} {currentNote.type}
             </Badge>
-            {note.category && note.category !== "Unsorted" && <Badge variant="outline">{note.category}</Badge>}
+            {currentNote.category && currentNote.category !== "Unsorted" && (
+              <Badge variant="outline">{currentNote.category}</Badge>
+            )}
           </DialogTitle>
         </DialogHeader>
 
@@ -202,8 +227,10 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
 
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <div>
-              <span>Created: {formatDate(note.createdAt)}</span>
-              {note.updatedAt !== note.createdAt && <span className="ml-4">Updated: {formatDate(note.updatedAt)}</span>}
+              <span>Created: {formatDate(currentNote.createdAt)}</span>
+              {currentNote.updatedAt !== currentNote.createdAt && (
+                <span className="ml-4">Updated: {formatDate(currentNote.updatedAt)}</span>
+              )}
             </div>
             <div className="flex gap-2">
               {!isEditing && (
@@ -216,7 +243,7 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
                 {copied ? <Check className="h-3 w-3 text-green-600" /> : <Copy className="h-3 w-3" />}
                 {copied ? "Copied!" : "Copy"}
               </Button>
-              {note.type === "url" && (
+              {currentNote.type === "url" && (
                 <Button variant="outline" size="sm" onClick={handleOpenUrl}>
                   <ExternalLink className="h-3 w-3 mr-1" />
                   Open
