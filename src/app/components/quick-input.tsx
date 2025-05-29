@@ -2,7 +2,17 @@
 import { useEffect, useState, useRef } from "react";
 import { cleanNoteData, isValidNote } from "../lib/notesUtils";
 
-export function QuickInput() {
+type Note = {
+	note: string;
+	category: string;
+	timestamp: number;
+};
+
+export function QuickInput({
+	onNoteSavedAction,
+}: {
+	onNoteSavedAction: (note: Note) => void;
+}) {
 	const [note, setNote] = useState("");
 	const [category, setCategory] = useState("");
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -32,7 +42,12 @@ export function QuickInput() {
 				throw new Error(data.error || "Failed to save");
 			}
 
-			console.log("Saved successfully:", data.saved);
+			// Notify parent component
+			const savedNote = {
+				...data.saved,
+				timestamp: Number(data.saved.timestamp), // ensures it's not BigInt
+			};
+			onNoteSavedAction(savedNote);
 
 			setNote("");
 			setCategory("");

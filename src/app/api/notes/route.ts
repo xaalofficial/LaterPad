@@ -19,17 +19,30 @@ export async function POST(request: Request) {
 			category: trimmedCategory,
 			timestamp: Date.now(),
 		},
-	})
+	});
 
-	return NextResponse.json({ success: true, saved });
+	// Convert BigInt to Number (or string) before returning
+	const safeSaved = {
+		...saved,
+		timestamp: Number(saved.timestamp), // or: saved.timestamp.toString()
+	};
+
+	return NextResponse.json({ success: true, saved: safeSaved });
 }
 
 // Shows notes
-export async function GET(){
+export async function GET() {
 	const notes = await prisma.note.findMany({
 		orderBy: {
 			timestamp: "desc",
 		},
-	})
-	return NextResponse.json(notes);
+	});
+
+	// Convert BigInt to Number or String
+	const safeNotes = notes.map((note) => ({
+		...note,
+		timestamp: Number(note.timestamp), // or: timestamp: note.timestamp.toString()
+	}));
+
+	return NextResponse.json({ notes: safeNotes });
 }
