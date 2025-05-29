@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { prisma } from "@/app/lib/prisma";
 import { cleanNoteData, isValidNote } from "../../lib/notesUtils";
 
 let notes: { note: string; category: string; timestamp: number }[] = [];
@@ -12,18 +13,23 @@ export async function POST(request: Request) {
 		return NextResponse.json({ error: "Note is empty" }, { status: 400 });
 	}
 
-	const saved = {
-		note: trimmedNote,
-		category: trimmedCategory,
-		timestamp: Date.now(),
-	};
-
-	notes.unshift(saved);
+	const saved = await prisma.note.create({
+		data: {
+			note: trimmedNote,
+			category: trimmedCategory,
+			timestamp: Date.now(),
+		},
+	})
 
 	return NextResponse.json({ success: true, saved });
 }
 
 // Shows notes
 export async function GET(){
+	const notes = await prisma.note.findMany({
+		orderBy: {
+			timestamp: "desc",
+		},
+	})
 	return NextResponse.json(notes);
 }
