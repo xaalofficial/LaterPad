@@ -99,12 +99,12 @@ export function AboutSection() {
               </div>
               <div className="space-y-3">
                 <h3 className="font-semibold text-lg">The Solution</h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <div className="text-muted-foreground leading-relaxed">
                   That's how LaterPad came to life — based on the idea:{" "}
                   <Badge variant="secondary" className="mx-1 font-mono">
                     "Paste now, don't worry later."
                   </Badge>
-                </p>
+                </div>
               </div>
             </div>
           </CardContent>
