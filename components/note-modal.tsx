@@ -143,24 +143,25 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
   const renderContent = () => {
     if (isEditing) {
       return (
-        <div className="space-y-4">
+        <div className="space-y-3 md:space-y-4">
           <Textarea
             value={editContent}
             onChange={(e) => setEditContent(e.target.value)}
-            className="min-h-[200px] font-mono"
+            className="min-h-[150px] md:min-h-[200px] text-xs md:text-sm font-mono"
             placeholder="Edit your note..."
           />
           <Input
             value={editCategory}
             onChange={(e) => setEditCategory(e.target.value)}
             placeholder="Category (optional)"
+            className="text-xs md:text-sm"
           />
           <div className="flex gap-2">
-            <Button onClick={handleSave} disabled={isSaving} size="sm">
+            <Button onClick={handleSave} disabled={isSaving} size="sm" className="text-xs md:text-sm">
               {isSaving ? <Check className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
               Save
             </Button>
-            <Button onClick={handleCancelEdit} variant="outline" size="sm">
+            <Button onClick={handleCancelEdit} variant="outline" size="sm" className="text-xs md:text-sm">
               <X className="h-3 w-3" />
               Cancel
             </Button>
@@ -210,7 +211,7 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-[95vw] md:max-w-2xl max-h-[80vh] overflow-y-auto p-4 md:p-6">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Badge variant="secondary" className={getTypeColor(currentNote.type)}>
@@ -222,29 +223,29 @@ export function NoteModal({ note, isOpen, onClose, onUpdate }: NoteModalProps) {
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
-          <div className="bg-muted/30 rounded-lg p-4 border">{renderContent()}</div>
+        <div className="space-y-3 md:space-y-4">
+          <div className="bg-muted/30 rounded-lg p-3 md:p-4 border">{renderContent()}</div>
 
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <div>
-              <span>Created: {formatDate(currentNote.createdAt)}</span>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-0 text-xs md:text-sm text-muted-foreground">
+            <div className="space-y-1 md:space-y-0">
+              <div>Created: {formatDate(currentNote.createdAt)}</div>
               {currentNote.updatedAt !== currentNote.createdAt && (
-                <span className="ml-4">Updated: {formatDate(currentNote.updatedAt)}</span>
+                <div className="md:ml-4 md:inline">Updated: {formatDate(currentNote.updatedAt)}</div>
               )}
             </div>
             <div className="flex gap-2">
               {!isEditing && (
-                <Button variant="outline" size="sm" onClick={handleEdit}>
+                <Button variant="outline" size="sm" onClick={handleEdit} className="text-xs md:text-sm">
                   <Edit className="h-3 w-3 mr-1" />
                   Edit
                 </Button>
               )}
-              <Button variant="outline" size="sm" onClick={handleCopy}>
+              <Button variant="outline" size="sm" onClick={handleCopy} className="text-xs md:text-sm">
                 {copied ? <Check className="h-3 w-3 text-green-600" /> : <Copy className="h-3 w-3" />}
                 {copied ? "Copied!" : "Copy"}
               </Button>
               {currentNote.type === "url" && (
-                <Button variant="outline" size="sm" onClick={handleOpenUrl}>
+                <Button variant="outline" size="sm" onClick={handleOpenUrl} className="text-xs md:text-sm">
                   <ExternalLink className="h-3 w-3 mr-1" />
                   Open
                 </Button>

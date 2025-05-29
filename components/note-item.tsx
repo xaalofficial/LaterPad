@@ -59,9 +59,9 @@ export function NoteItem({ note, onDelete, onView }: NoteItemProps) {
     if (note.type === "todo") {
       const lines = truncatedContent.split("\n").slice(0, 3) // Show max 3 lines for todos
       return (
-        <div className="space-y-1">
+        <div className="space-y-0.5 md:space-y-1">
           {lines.map((line, index) => (
-            <div key={index} className="flex items-start gap-2 text-sm">
+            <div key={index} className="flex items-start gap-1.5 md:gap-2 text-xs md:text-sm">
               {line.trim().startsWith("[ ]") || line.trim().startsWith("[x]") ? (
                 <>
                   <div className="mt-0.5">{line.trim().startsWith("[x]") ? "✅" : "☐"}</div>
@@ -85,26 +85,30 @@ export function NoteItem({ note, onDelete, onView }: NoteItemProps) {
       return (
         <button
           onClick={handleOpenUrl}
-          className="text-blue-600 hover:text-blue-800 hover:underline text-left text-sm break-all"
+          className="text-blue-600 hover:text-blue-800 hover:underline text-left text-xs md:text-sm break-all"
         >
           {truncatedContent}
         </button>
       )
     }
 
-    return <span className="text-sm leading-relaxed break-words font-mono">{truncatedContent}</span>
+    return <span className="text-xs md:text-sm leading-relaxed break-words font-mono">{truncatedContent}</span>
   }
 
   return (
     <Card className="group hover:shadow-md transition-shadow">
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 space-y-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <Badge variant="secondary" className={getTypeColor(note.type)}>
+      <CardContent className="p-3 md:p-4">
+        <div className="flex items-start justify-between gap-2 md:gap-3">
+          <div className="flex-1 space-y-1.5 md:space-y-2">
+            <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
+              <Badge variant="secondary" className={`${getTypeColor(note.type)} text-xs`}>
                 {getTypeIcon(note.type)} {note.type}
               </Badge>
-              {note.category && note.category !== "Unsorted" && <Badge variant="outline">{note.category}</Badge>}
+              {note.category && note.category !== "Unsorted" && (
+                <Badge variant="outline" className="text-xs">
+                  {note.category}
+                </Badge>
+              )}
               <span className="text-xs text-muted-foreground">{formatDate(note.createdAt)}</span>
             </div>
 
@@ -116,17 +120,17 @@ export function NoteItem({ note, onDelete, onView }: NoteItemProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-            <Button variant="ghost" size="sm" onClick={() => onView(note)} className="h-8 w-8 p-0">
+          <div className="flex items-center gap-1 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+            <Button variant="ghost" size="sm" onClick={() => onView(note)} className="h-7 w-7 md:h-8 md:w-8 p-0">
               <Eye className="h-3 w-3" />
             </Button>
 
-            <Button variant="ghost" size="sm" onClick={handleCopy} className="h-8 w-8 p-0">
+            <Button variant="ghost" size="sm" onClick={handleCopy} className="h-7 w-7 md:h-8 md:w-8 p-0">
               {copied ? <Check className="h-3 w-3 text-green-600" /> : <Copy className="h-3 w-3" />}
             </Button>
 
             {note.type === "url" && (
-              <Button variant="ghost" size="sm" onClick={handleOpenUrl} className="h-8 w-8 p-0">
+              <Button variant="ghost" size="sm" onClick={handleOpenUrl} className="h-7 w-7 md:h-8 md:w-8 p-0">
                 <ExternalLink className="h-3 w-3" />
               </Button>
             )}
@@ -135,7 +139,7 @@ export function NoteItem({ note, onDelete, onView }: NoteItemProps) {
               variant="ghost"
               size="sm"
               onClick={() => onDelete(note.id)}
-              className="h-8 w-8 p-0 text-red-600 hover:text-red-800"
+              className="h-7 w-7 md:h-8 md:w-8 p-0 text-red-600 hover:text-red-800"
             >
               <Trash2 className="h-3 w-3" />
             </Button>

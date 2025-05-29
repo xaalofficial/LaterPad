@@ -116,18 +116,25 @@ export function QuickInput({ onNoteSaved }: QuickInputProps) {
         </div>
       )}
 
-      <div className="space-y-6">
-        <div className="text-center space-y-3">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Target className="h-6 w-6 text-primary" />
-            <h2 className="text-2xl font-bold">Capture Mode</h2>
+      <div className="space-y-4 md:space-y-6">
+        <div className="text-center space-y-2 md:space-y-3">
+          <div className="flex items-center justify-center gap-2 mb-2 md:mb-4">
+            <Target className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+            <h2 className="text-xl md:text-2xl font-bold">Capture Mode</h2>
           </div>
-          <p className="text-muted-foreground text-lg">Drop your thoughts here. We'll organize them later!</p>
+          <p className="text-muted-foreground text-base md:text-lg">
+            Drop your thoughts here. We'll organize them later!
+          </p>
         </div>
 
         {/* Quick Templates */}
-        <div className="flex justify-center gap-2 flex-wrap">
-          <Button variant="outline" size="sm" onClick={insertTodoTemplate} className="h-8 gap-1">
+        <div className="flex justify-center gap-1 md:gap-2 flex-wrap">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={insertTodoTemplate}
+            className="h-7 md:h-8 gap-1 text-xs md:text-sm"
+          >
             <CheckSquare className="h-3 w-3" />
             Todo List
           </Button>
@@ -141,7 +148,7 @@ export function QuickInput({ onNoteSaved }: QuickInputProps) {
                 textareaRef.current.setSelectionRange(8, 8)
               }
             }}
-            className="h-8 gap-1"
+            className="h-7 md:h-8 gap-1 text-xs md:text-sm"
           >
             <Link className="h-3 w-3" />
             URL
@@ -155,14 +162,14 @@ export function QuickInput({ onNoteSaved }: QuickInputProps) {
                 textareaRef.current.focus()
               }
             }}
-            className="h-8 gap-1"
+            className="h-7 md:h-8 gap-1 text-xs md:text-sm"
           >
             <FileText className="h-3 w-3" />
             Note
           </Button>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3 md:space-y-4">
           <div className="relative group">
             <Textarea
               ref={textareaRef}
@@ -170,13 +177,13 @@ export function QuickInput({ onNoteSaved }: QuickInputProps) {
               onChange={(e) => setContent(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Paste anything... URLs, tasks, brilliant ideas, random thoughts..."
-              className="min-h-[140px] text-base font-mono resize-none bg-muted/30 border-2 border-muted transition-colors duration-200 focus:border-primary focus:bg-background focus:ring-0 focus:ring-offset-0"
+              className="min-h-[120px] md:min-h-[140px] text-sm md:text-base font-mono resize-none bg-muted/30 border-2 border-muted transition-colors duration-200 focus:border-primary focus:bg-background focus:ring-0 focus:ring-offset-0"
               disabled={isLoading}
             />
             {content.trim() && (
               <Badge
                 variant="secondary"
-                className="absolute top-4 right-4 animate-in slide-in-from-right-2 duration-300"
+                className="absolute top-2 md:top-4 right-2 md:right-4 animate-in slide-in-from-right-2 duration-300 text-xs"
               >
                 {getTypeIcon(detectedType)} {detectedType}
               </Badge>
@@ -184,13 +191,13 @@ export function QuickInput({ onNoteSaved }: QuickInputProps) {
 
             {/* Character count */}
             {content.length > 0 && (
-              <div className="absolute bottom-3 left-3 text-xs text-muted-foreground font-mono">
+              <div className="absolute bottom-2 md:bottom-3 left-2 md:left-3 text-xs text-muted-foreground font-mono">
                 {content.length} chars
               </div>
             )}
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
             <Input
               ref={categoryRef}
               value={category}
@@ -203,14 +210,14 @@ export function QuickInput({ onNoteSaved }: QuickInputProps) {
             <Button
               onClick={handleSave}
               disabled={!content.trim() || isLoading}
-              size="lg"
-              className="px-8 transition-all duration-200"
+              size="default"
+              className="px-4 sm:px-8 transition-all duration-200 w-full sm:w-auto"
             >
               {isLoading ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
+                <Loader2 className="h-4 w-4 md:h-5 md:w-5 animate-spin" />
               ) : (
                 <>
-                  <Plus className="h-5 w-5 mr-2" />
+                  <Plus className="h-4 w-4 md:h-5 md:w-5 mr-2" />
                   Capture
                 </>
               )}
@@ -218,7 +225,7 @@ export function QuickInput({ onNoteSaved }: QuickInputProps) {
           </div>
 
           <div className="text-center space-y-2">
-            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+            <div className="hidden md:flex items-center justify-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
                 <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl+Enter</kbd>
                 <span>to save</span>
@@ -232,17 +239,18 @@ export function QuickInput({ onNoteSaved }: QuickInputProps) {
                 <span>view all</span>
               </div>
             </div>
+            <div className="md:hidden text-xs text-muted-foreground">Swipe right to view all notes</div>
           </div>
         </div>
 
         {/* Todo Help */}
         <Card className="bg-muted/30">
-          <CardContent className="p-4">
-            <h4 className="font-medium mb-2 flex items-center gap-2">
-              <CheckSquare className="h-4 w-4" />
+          <CardContent className="p-3 md:p-4">
+            <h4 className="font-medium mb-1 md:mb-2 flex items-center gap-2 text-sm md:text-base">
+              <CheckSquare className="h-3.5 w-3.5 md:h-4 md:w-4" />
               Creating Todo Lists
             </h4>
-            <div className="text-sm text-muted-foreground space-y-1">
+            <div className="text-xs md:text-sm text-muted-foreground space-y-0.5 md:space-y-1">
               <p>
                 • Use <code className="bg-background px-1 rounded">[ ]</code> for unchecked items
               </p>

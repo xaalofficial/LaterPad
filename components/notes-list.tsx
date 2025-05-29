@@ -127,31 +127,33 @@ export function NotesList({ refreshTrigger, onNotesCountChange }: NotesListProps
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="text-center space-y-3">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <Archive className="h-6 w-6 text-primary" />
-          <h2 className="text-2xl font-bold">Your Collection</h2>
+      <div className="text-center space-y-2 md:space-y-3">
+        <div className="flex items-center justify-center gap-2 mb-2 md:mb-4">
+          <Archive className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+          <h2 className="text-xl md:text-2xl font-bold">Your Collection</h2>
         </div>
-        <p className="text-muted-foreground text-lg">Find, filter, and manage all your captured thoughts</p>
+        <p className="text-muted-foreground text-base md:text-lg">
+          Find, filter, and manage all your captured thoughts
+        </p>
       </div>
 
       {/* Search and Filters */}
-      <div className="space-y-4">
+      <div className="space-y-3 md:space-y-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             ref={searchRef}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search your notes... (Ctrl+F)"
+            placeholder="Search your notes..."
             className="pl-10 border-2 border-muted transition-colors duration-200 focus:border-primary focus:ring-0 focus:ring-offset-0"
           />
         </div>
 
-        <div className="flex flex-wrap gap-2 justify-center">
-          <div className="flex items-center gap-1 mr-2">
-            <Filter className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground font-medium">Filter:</span>
+        <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
+          <div className="flex items-center gap-1 mr-1 md:mr-2">
+            <Filter className="h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
+            <span className="text-xs md:text-sm text-muted-foreground font-medium">Filter:</span>
           </div>
           {typeOptions.map((option) => (
             <Button
@@ -159,7 +161,7 @@ export function NotesList({ refreshTrigger, onNotesCountChange }: NotesListProps
               variant={typeFilter === option.value ? "default" : "outline"}
               size="sm"
               onClick={() => setTypeFilter(option.value)}
-              className="h-9 transition-all duration-200"
+              className="h-7 md:h-9 text-xs md:text-sm transition-all duration-200"
             >
               <span className="mr-1">{option.icon}</span>
               {option.label} ({option.count})
@@ -168,13 +170,13 @@ export function NotesList({ refreshTrigger, onNotesCountChange }: NotesListProps
         </div>
 
         {categories.length > 0 && (
-          <div className="flex flex-wrap gap-2 justify-center">
-            <span className="text-sm text-muted-foreground font-medium mr-2">Categories:</span>
+          <div className="flex flex-wrap gap-1 md:gap-2 justify-center">
+            <span className="text-xs md:text-sm text-muted-foreground font-medium mr-1 md:mr-2">Categories:</span>
             <Button
               variant={categoryFilter === "all" ? "default" : "outline"}
               size="sm"
               onClick={() => setCategoryFilter("all")}
-              className="h-8 transition-all duration-200"
+              className="h-7 md:h-8 text-xs md:text-sm transition-all duration-200"
             >
               All
             </Button>
@@ -184,7 +186,7 @@ export function NotesList({ refreshTrigger, onNotesCountChange }: NotesListProps
                 variant={categoryFilter === category ? "default" : "outline"}
                 size="sm"
                 onClick={() => setCategoryFilter(category)}
-                className="h-8 transition-all duration-200"
+                className="h-7 md:h-8 text-xs md:text-sm transition-all duration-200"
               >
                 🏷️ {category}
               </Button>
@@ -195,20 +197,20 @@ export function NotesList({ refreshTrigger, onNotesCountChange }: NotesListProps
 
       {/* Notes List */}
       {loading ? (
-        <div className="flex items-center justify-center py-16">
-          <div className="text-center space-y-3">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
-            <span className="text-muted-foreground">Loading your notes...</span>
+        <div className="flex items-center justify-center py-10 md:py-16">
+          <div className="text-center space-y-2 md:space-y-3">
+            <Loader2 className="h-6 w-6 md:h-8 md:w-8 animate-spin mx-auto text-primary" />
+            <span className="text-sm md:text-base text-muted-foreground">Loading your notes...</span>
           </div>
         </div>
       ) : notes.length === 0 ? (
-        <div className="text-center py-16">
+        <div className="text-center py-10 md:py-16">
           {search || typeFilter !== "all" || categoryFilter !== "all" ? (
-            <div className="space-y-4">
-              <div className="text-6xl">🔍</div>
+            <div className="space-y-3 md:space-y-4">
+              <div className="text-4xl md:text-6xl">🔍</div>
               <div>
-                <p className="text-lg font-medium">No notes match your filters</p>
-                <p className="text-muted-foreground">Try adjusting your search or filters</p>
+                <p className="text-base md:text-lg font-medium">No notes match your filters</p>
+                <p className="text-sm md:text-base text-muted-foreground">Try adjusting your search or filters</p>
               </div>
               <Button
                 variant="outline"
@@ -217,40 +219,44 @@ export function NotesList({ refreshTrigger, onNotesCountChange }: NotesListProps
                   setTypeFilter("all")
                   setCategoryFilter("all")
                 }}
-                className="mt-4"
+                className="mt-2 md:mt-4 text-sm"
               >
                 Clear all filters
               </Button>
             </div>
           ) : (
-            <div className="space-y-4">
-              <div className="text-6xl">📝</div>
+            <div className="space-y-3 md:space-y-4">
+              <div className="text-4xl md:text-6xl">📝</div>
               <div>
-                <p className="text-lg font-medium">Your collection is empty</p>
-                <p className="text-muted-foreground">Start capturing your thoughts in the Quick Add tab!</p>
+                <p className="text-base md:text-lg font-medium">Your collection is empty</p>
+                <p className="text-sm md:text-base text-muted-foreground">
+                  Start capturing your thoughts in the Quick Add tab!
+                </p>
               </div>
-              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                <span>Press</span>
-                <kbd className="px-2 py-1 bg-muted rounded text-xs">←</kbd>
+              <div className="flex items-center justify-center gap-2 text-xs md:text-sm text-muted-foreground">
+                <span>Swipe left</span>
+                <span className="md:hidden">or tap the first tab</span>
+                <span className="hidden md:inline">or press</span>
+                <kbd className="hidden md:inline px-2 py-1 bg-muted rounded text-xs">←</kbd>
                 <span>to start adding notes</span>
               </div>
             </div>
           )}
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3 md:space-y-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold">
+            <div className="flex items-center gap-1 md:gap-2">
+              <span className="text-sm md:text-base font-semibold">
                 {notes.length} {notes.length === 1 ? "note" : "notes"} found
               </span>
             </div>
-            <div className="text-sm text-muted-foreground">
+            <div className="hidden md:block text-sm text-muted-foreground">
               <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl+F</kbd> to search
             </div>
           </div>
 
-          <div className="grid gap-3">
+          <div className="grid gap-2 md:gap-3">
             {notes.map((note, index) => (
               <div
                 key={note.id}

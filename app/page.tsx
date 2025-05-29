@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Moon, Sun, Zap, Archive, ArrowLeft, ArrowRight, Info } from "lucide-react"
 import { useTheme } from "next-themes"
+import { useSwipe } from "@/hooks/use-swipe"
 
 type Tab = "add" | "notes" | "about"
 
@@ -58,6 +59,19 @@ export default function HomePage() {
     return () => document.removeEventListener("keydown", handleKeyDown)
   }, [activeTab])
 
+  // Swipe navigation for mobile
+  const { handleTouchStart, handleTouchMove, handleTouchEnd } = useSwipe({
+    onSwipeLeft: () => {
+      if (activeTab === "add") setActiveTab("notes")
+      else if (activeTab === "notes") setActiveTab("about")
+    },
+    onSwipeRight: () => {
+      if (activeTab === "notes") setActiveTab("add")
+      else if (activeTab === "about") setActiveTab("notes")
+    },
+    threshold: 50,
+  })
+
   const tabs = [
     {
       id: "add" as Tab,
@@ -82,20 +96,25 @@ export default function HomePage() {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange={false}>
-      <div className="min-h-screen bg-background">
+      <div
+        className="min-h-screen bg-background"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {/* Header */}
         <header className="border-b bg-background sticky top-0 z-50">
-          <div className="container mx-auto px-6 py-4">
+          <div className="container mx-auto px-4 py-3 md:px-6 md:py-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center">
-                  <Zap className="h-4 w-4 text-primary-foreground" />
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="h-7 w-7 md:h-8 md:w-8 bg-primary rounded-lg flex items-center justify-center">
+                  <Zap className="h-3.5 w-3.5 md:h-4 md:w-4 text-primary-foreground" />
                 </div>
-                <h1 className="text-2xl font-bold">LaterPad</h1>
+                <h1 className="text-xl md:text-2xl font-bold">LaterPad</h1>
               </div>
 
-              <div className="flex items-center gap-4">
-                {/* Quick Actions moved to header */}
+              <div className="flex items-center gap-2 md:gap-4">
+                {/* Quick Actions - only show on desktop */}
                 <div className="hidden md:flex items-center gap-3 text-sm text-muted-foreground bg-muted/50 rounded-lg px-3 py-2">
                   <div className="flex items-center gap-1">
                     <ArrowLeft className="h-3 w-3" />
@@ -119,9 +138,9 @@ export default function HomePage() {
         </header>
 
         {/* Tab Navigation */}
-        <div className="container mx-auto px-6 py-6">
-          <div className="flex items-center justify-center mb-8">
-            <div className="flex items-center bg-muted rounded-lg p-1 gap-1">
+        <div className="container mx-auto px-4 py-4 md:px-6 md:py-6">
+          <div className="flex items-center justify-center mb-4 md:mb-8">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center w-full sm:w-auto bg-muted rounded-lg p-1 gap-1">
               {tabs.map((tab, index) => {
                 const Icon = tab.icon
                 const isActive = activeTab === tab.id
@@ -131,9 +150,11 @@ export default function HomePage() {
                     key={tab.id}
                     variant={isActive ? "default" : "ghost"}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`relative h-12 px-6 gap-3 transition-all duration-200 ${isActive ? "shadow-sm" : ""}`}
+                    className={`relative h-auto py-2 sm:h-12 px-3 sm:px-6 gap-2 sm:gap-3 transition-all duration-200 justify-start sm:justify-center ${
+                      isActive ? "shadow-sm" : ""
+                    }`}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-4 w-4 flex-shrink-0" />
                     <div className="flex flex-col items-start">
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{tab.label}</span>
@@ -143,7 +164,7 @@ export default function HomePage() {
                           </Badge>
                         )}
                       </div>
-                      <span className="text-xs text-muted-foreground">{tab.description}</span>
+                      <span className="text-xs text-muted-foreground hidden sm:inline">{tab.description}</span>
                     </div>
                   </Button>
                 )

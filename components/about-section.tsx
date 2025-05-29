@@ -29,12 +29,12 @@ export function AboutSection() {
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
       {/* Header */}
-      <div className="text-center space-y-4">
-        <div className="flex items-center justify-center gap-3 mb-6">
-          <div className="h-12 w-12 bg-primary rounded-xl flex items-center justify-center">
-            <Heart className="h-6 w-6 text-primary-foreground" />
+      <div className="text-center space-y-3 md:space-y-4">
+        <div className="flex items-center justify-center gap-2 md:gap-3 mb-4 md:mb-6">
+          <div className="h-10 w-10 md:h-12 md:w-12 bg-primary rounded-xl flex items-center justify-center">
+            <Heart className="h-5 w-5 md:h-6 md:w-6 text-primary-foreground" />
           </div>
-          <h2 className="text-3xl font-bold">About LaterPad</h2>
+          <h2 className="text-2xl md:text-3xl font-bold">About LaterPad</h2>
         </div>
       </div>
 
@@ -46,14 +46,14 @@ export function AboutSection() {
             visibleParagraphs >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          <CardContent className="p-6">
-            <div className="flex items-start gap-4">
-              <div className="h-10 w-10 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Lightbulb className="h-5 w-5 text-red-600 dark:text-red-400" />
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-start gap-3 md:gap-4">
+              <div className="h-8 w-8 md:h-10 md:w-10 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Lightbulb className="h-4 w-4 md:h-5 md:w-5 text-red-600 dark:text-red-400" />
               </div>
-              <div className="space-y-3">
-                <h3 className="font-semibold text-lg">The Problem I Faced</h3>
-                <p className="text-muted-foreground leading-relaxed">
+              <div className="space-y-2 md:space-y-3">
+                <h3 className="font-semibold text-base md:text-lg">The Problem I Faced</h3>
+                <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                   LaterPad is a minimalist note-saving app I built to solve a real problem I face daily: the need to
                   quickly capture a thought, a URL, a task, or something I want to revisit — without worrying about
                   where to put it or how to organize it right away.
@@ -140,18 +140,18 @@ export function AboutSection() {
           visibleParagraphs >= 4 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
       >
-        <h3 className="text-xl font-semibold text-center mb-6">Key Features</h3>
-        <div className="grid md:grid-cols-3 gap-4">
+        <h3 className="text-lg md:text-xl font-semibold text-center mb-4 md:mb-6">Key Features</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
           {features.map((feature, index) => {
             const Icon = feature.icon
             return (
               <Card key={index} className="text-center">
-                <CardContent className="p-4">
-                  <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3">
-                    <Icon className="h-6 w-6 text-primary" />
+                <CardContent className="p-3 md:p-4">
+                  <div className="h-10 w-10 md:h-12 md:w-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2 md:mb-3">
+                    <Icon className="h-5 w-5 md:h-6 md:w-6 text-primary" />
                   </div>
-                  <h4 className="font-medium mb-2">{feature.label}</h4>
-                  <p className="text-sm text-muted-foreground">{feature.description}</p>
+                  <h4 className="font-medium mb-1 md:mb-2 text-sm md:text-base">{feature.label}</h4>
+                  <p className="text-xs md:text-sm text-muted-foreground">{feature.description}</p>
                 </CardContent>
               </Card>
             )
@@ -165,11 +165,15 @@ export function AboutSection() {
           visibleParagraphs >= 4 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
         }`}
       >
-        <div className="bg-muted/50 rounded-lg p-6">
-          <p className="text-muted-foreground">
+        <div className="bg-muted/50 rounded-lg p-4 md:p-6">
+          <p className="text-sm md:text-base text-muted-foreground">
             Ready to start capturing your thoughts?{" "}
             <span className="inline-flex items-center gap-1">
-              Press <kbd className="px-2 py-1 bg-background border rounded text-xs">←</kbd> to go back to Quick Add
+              <span className="md:hidden">Swipe left</span>
+              <span className="hidden md:inline">
+                Press <kbd className="px-2 py-1 bg-background border rounded text-xs">←</kbd>
+              </span>{" "}
+              to go back to Quick Add
             </span>
           </p>
         </div>
