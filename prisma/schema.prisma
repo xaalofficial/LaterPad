@@ -4,13 +4,13 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 model Note {
   id        String   @id @default(cuid())
   content   String
-  type      String   // "url" | "todo" | "note"
+  type      String
   category  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
