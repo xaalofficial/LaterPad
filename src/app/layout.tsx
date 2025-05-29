@@ -28,14 +28,11 @@ export default function RootLayout({
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 			>
 				<main className="flex min-h-screen items-center justify-center bg-gray-50">
-					<div className="absolute top-4 left-4 text-white font-extrabold text-2xl select-none
-          bg-linear-to-r bg-gray-950 shadow-md px-3 rounded">
+					<div className="fixed top-4 left-4 text-white font-extrabold text-2xl select-none bg-gray-950 shadow-md px-3 rounded z-50">
 						LaterPad
 					</div>
 
-					<div className="w-full h-screen max-w-4xl p-10">
-						{children}
-					</div>
+					<div className="w-full max-w-4xl p-10">{children}</div>
 				</main>
 			</body>
 		</html>
