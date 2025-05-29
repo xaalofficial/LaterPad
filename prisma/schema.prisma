@@ -11,5 +11,5 @@ model Note {
   id        Int      @id @default(autoincrement())
   note      String
   category  String
-  timestamp Int
+  timestamp BigInt
 }
