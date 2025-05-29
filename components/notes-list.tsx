@@ -46,9 +46,11 @@ export function NotesList({ refreshTrigger, onNotesCountChange }: NotesListProps
           }
         }
 
-        // Extract unique categories
+        // Extract unique categories (excluding "Unsorted")
         const uniqueCategories = Array.from(
-          new Set(fetchedNotes.map((note: Note) => note.category).filter(Boolean)),
+          new Set(
+            fetchedNotes.map((note: Note) => note.category).filter((category) => category && category !== "Unsorted"),
+          ),
         ) as string[]
         setCategories(uniqueCategories)
       }
@@ -89,6 +91,10 @@ export function NotesList({ refreshTrigger, onNotesCountChange }: NotesListProps
   const handleViewNote = (note: Note) => {
     setSelectedNote(note)
     setIsModalOpen(true)
+  }
+
+  const handleUpdateNote = () => {
+    fetchNotes() // Refresh the notes list
   }
 
   const handleCloseModal = () => {
@@ -259,7 +265,7 @@ export function NotesList({ refreshTrigger, onNotesCountChange }: NotesListProps
       )}
 
       {/* Note Modal */}
-      <NoteModal note={selectedNote} isOpen={isModalOpen} onClose={handleCloseModal} />
+      <NoteModal note={selectedNote} isOpen={isModalOpen} onClose={handleCloseModal} onUpdate={handleUpdateNote} />
     </div>
   )
 }
